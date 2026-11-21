@@ -90,7 +90,7 @@ if __name__ == '__main__':
     ket_qua = mo_hinh(runs, reqs)
     for ten, gia_tri in ket_qua.items():
         print(f'{ten:12s} {gia_tri:>14,.0f}')
-    # TODO CP1 · Nhiệm vụ A3: tính lại theo từng giá trị của cột loai.
+# TODO CP1 · Nhiệm vụ A3: tính lại theo từng giá trị của cột loai.
     print('\nA3 · Theo loại yêu cầu')
     print('loai        so_yc  ti_le_tc  lan_chay        cps   so_voi_12k')
     for loai in ['noi_dia', 'hang_nang', 'quoc_te', 'doi_tac']:
@@ -108,7 +108,7 @@ if __name__ == '__main__':
     print('\nTỉ lệ ok theo lần thử')
     print(bang.pivot_table(index='loai', columns='attempt', values='ok', aggfunc='mean').round(3))
 
-        # A4 · Chi phí cố định cho phạm vi noi_dia + hang_nang
+# A4 · Chi phí cố định cho phạm vi noi_dia + hang_nang
     CO_DINH = 40_000_000
     YC_MOI_THANG = 45_000
     pham_vi = reqs[reqs['loai'].isin(['noi_dia', 'hang_nang'])]
@@ -122,7 +122,55 @@ if __name__ == '__main__':
         tong_moi_viec = kq['cps'] + co_dinh_moi_viec
         print(f"{ten:20s} {tc_thang:10,.0f} {co_dinh_moi_viec:8,.0f} "
               f"{tong_moi_viec:8,.0f} {tong_moi_viec / BASELINE:5.2f}x")
-    # TODO CP2 · Nhiệm vụ B: đổi từng yếu tố, ghi vào bảng độ nhạy.
+# TODO CP2 · Nhiệm vụ B: đổi từng yếu tố, ghi vào bảng độ nhạy.
+    kich_ban = {
+        'Giá token gấp đôi':        dict(gia_vao=52, gia_ra=260),
+        'Giá token giảm một nửa':   dict(gia_vao=13, gia_ra=65),
+        'Xem lại gấp đôi':          dict(he_so_xem_lai=2),
+        'Xem lại giảm một nửa':     dict(he_so_xem_lai=0.5),
+        'Làm lại gấp đôi':          dict(he_so_lam_lai=2),
+        'Làm lại giảm một nửa':     dict(he_so_lam_lai=0.5),
+        'Lương tăng 25%':           dict(luong_phut=2500),
+        'Tối đa 2 lần chạy':        dict(max_lan_chay=2),
+        'Chỉ 1 lần chạy':           dict(max_lan_chay=1),
+    }
+    goc = mo_hinh(runs, reqs)['cps']
+    print('\nB1 · Đổi từng yếu tố')
+    print(f"{'Gốc (A2)':25s} {goc:8,.0f}")
+    for ten, kw in kich_ban.items():
+        cps = mo_hinh(runs, reqs, **kw)['cps']     # **kw: truyền các tham số trong dict vào hàm
+        print(f'{ten:25s} {cps:8,.0f} {(cps / goc - 1) * 100:+6.1f}%')
+# B2 · Đổi một cặp: giá token gấp đôi + xem lại gấp đôi
+    cps_cap = mo_hinh(runs, reqs, gia_vao=52, gia_ra=260, he_so_xem_lai=2)['cps']
+    print(f"\nB2 · Token x2 + xem lại x2: {cps_cap:,.0f} ({(cps_cap / goc - 1) * 100:+.1f}%)")
+# B3 · Chi phí cả hệ thống theo giới hạn số lần chạy
+    print('\nB3 · Giới hạn số lần chạy: chi phí cả hệ thống cho 1.200 yêu cầu')
+    print(f"{'Giới hạn':10s} {'Tổng trợ lý':>12s} {'Không TC':>9s} {'Cả hệ thống':>12s} {'cps':>7s}")
+    for k in [1, 2, 3]:
+        kq = mo_hinh(runs, reqs, max_lan_chay=k)
+        khong_tc = len(reqs) - kq['thanh_cong']            # số yêu cầu nhân viên phải làm thay
+        ca_he_thong = kq['tong'] + khong_tc * BASELINE
+        print(f"{k:<10d} {kq['tong']:12,.0f} {khong_tc:9d} {ca_he_thong:12,.0f} {kq['cps']:7,.0f}")
+# B4 · Xem lại 100% cho noi_dia + hang_nang
+    pham_vi = reqs[reqs['loai'].isin(['noi_dia', 'hang_nang'])]
+    runs_pv = runs[runs['request_id'].isin(pham_vi['request_id'])]
+    so_yc_ok = runs_pv.loc[runs_pv['status'] == 'ok', 'request_id'].nunique()   # yêu cầu có ít nhất 1 lần chạy ok
+    so_lam_lai = (pham_vi['ket_qua'] == 'lam_lai').sum()
+    so_tc = (pham_vi['ket_qua'] == 'thanh_cong').sum()
+    tien_may = (runs_pv['tokens_in'] / 1000 * GIA_VAO + runs_pv['tokens_out'] / 1000 * GIA_RA
+                + runs_pv['tool_calls'] * GIA_TOOL).sum()
+    phut_lam_lai_tb = reqs.loc[reqs['ket_qua'] == 'lam_lai', 'phut_lam_lai_simulated'].mean()
+    print(f'\nB4 · Xem lại 100% (noi_dia + hang_nang): {len(pham_vi)} yc, {so_yc_ok} yc có lần chạy ok, '
+          f'{so_lam_lai} ca làm lại, {so_tc} việc thành công, tiền máy {tien_may:,.0f}')
+    print(f'Phút làm lại trung bình trong dữ liệu: {phut_lam_lai_tb:.1f}')
+    for phut_lam_lai in [9, phut_lam_lai_tb]:
+        xem_lai = so_yc_ok * 5 * LUONG_PHUT
+        lam_lai = so_lam_lai * phut_lam_lai * LUONG_PHUT
+        tong = xem_lai + lam_lai + tien_may
+        cps = tong / so_tc
+        hoa_von = (BASELINE * so_tc - lam_lai - tien_may) / (so_yc_ok * LUONG_PHUT)   # số phút xem lại để cps = 12.000
+        print(f'Làm lại {phut_lam_lai:4.1f} phút: tổng {tong:,.0f}, cps {cps:,.0f} = {cps / BASELINE:.2f}x, '
+              f'hoà vốn khi xem lại <= {hoa_von:.1f} phút')
     # TODO CP4 · Nhiệm vụ D: cỡ mẫu.
     #   from statsmodels.stats.proportion import proportion_effectsize
     #   from statsmodels.stats.power import NormalIndPower
