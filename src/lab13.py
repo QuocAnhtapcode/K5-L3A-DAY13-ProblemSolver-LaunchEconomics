@@ -213,3 +213,12 @@ if __name__ == '__main__':
     print(f"Tỉ lệ mở lại 7 ngày hiện tại: {reqs['mo_lai_trong_7_ngay'].mean():.2%} "
           f"({reqs['mo_lai_trong_7_ngay'].sum()}/{len(reqs)}); trong phạm vi noi_dia + hang_nang: "
           f"{pham_vi['mo_lai_trong_7_ngay'].mean():.2%}")
+# E1 · Tính thử 3 chỉ số trên 1.200 yêu cầu
+    chinh = (reqs['dong_trong_24h'] == 1) & (reqs['mo_lai_trong_7_ngay'] == 0)
+    xem = reqs[reqs['duoc_xem_lai'] == 1]
+    bo_qua = xem['quyet_dinh_xem_lai'].isin(['sua', 'bo'])
+    an_toan = reqs['mo_lai_trong_7_ngay'] == 1
+    print('\nE1 · Ba chỉ số')
+    print(f'Chính:   {chinh.mean():.2%} ({chinh.sum()}/{len(reqs)})')
+    print(f'Dùng:    {bo_qua.mean():.2%} ({bo_qua.sum()}/{len(xem)})')
+    print(f'An toàn: {an_toan.mean():.2%} ({an_toan.sum()}/{len(reqs)})')
