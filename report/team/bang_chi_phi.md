@@ -81,5 +81,5 @@ Nhận xét chính rút ra từ bảng: giá token tăng gấp đôi chỉ làm 
 
 ## B4 · Nếu phải xem lại tất cả
 
-- Chi phí mỗi việc thành công khi xem lại 100% (`noi_dia` + `hang_nang`), so với 12.000 đ: (948 × 5 phút + 48 × 9 phút) × 2.000 đ + 224.513 đ tiền máy = 10.568.513 đ ÷ 900 việc = **11.743 đ = 0,98×** [simulated]. Nếu làm lại mất 15,3 phút như trung bình trong dữ liệu: 12.414 đ = 1,03× [simulated], đắt hơn nhân viên tự làm.
+- Chi phí mỗi việc thành công khi xem lại 100% (`noi_dia` + `hang_nang`), so với 12.000 đ: (948 × 5 phút + 48 × 9 phút) × 2.000 đ + 224.513 đ tiền máy = 10.568.513 đ ÷ 900 việc = **11.743 đ = 0,98×** [simulated]. Dùng thời gian làm lại trung bình chưa làm tròn (hiển thị 15,3 phút), code cho 12.415 đ = 1,03× [simulated], đắt hơn nhân viên tự làm.
 - Kết quả này nói gì về thứ pilot cần học được? Xem lại 100% gần như xoá hết tiết kiệm vì tiền xem lại chiếm ~90% chi phí. Pilot phải học được tỉ lệ xem lại giảm an toàn tới đâu, và mỗi lần xem lại có xuống dưới mức hoà vốn 5,1 phút (làm lại 9 phút) hoặc 4,8 phút (làm lại 15,3 phút) không.
