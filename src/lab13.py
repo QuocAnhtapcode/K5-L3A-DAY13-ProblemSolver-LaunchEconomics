@@ -171,6 +171,45 @@ if __name__ == '__main__':
         hoa_von = (BASELINE * so_tc - lam_lai - tien_may) / (so_yc_ok * LUONG_PHUT)   # số phút xem lại để cps = 12.000
         print(f'Làm lại {phut_lam_lai:4.1f} phút: tổng {tong:,.0f}, cps {cps:,.0f} = {cps / BASELINE:.2f}x, '
               f'hoà vốn khi xem lại <= {hoa_von:.1f} phút')
-    # TODO CP4 · Nhiệm vụ D: cỡ mẫu.
-    #   from statsmodels.stats.proportion import proportion_effectsize
-    #   from statsmodels.stats.power import NormalIndPower
+# TODO CP4 · Nhiệm vụ D: cỡ mẫu.
+#   from statsmodels.stats.proportion import proportion_effectsize
+#   from statsmodels.stats.power import NormalIndPower
+    from statistics import NormalDist
+    from statsmodels.stats.proportion import proportion_effectsize
+    from statsmodels.stats.power import NormalIndPower
+
+    def co_mau(p1, p2, alpha=0.05, power=0.8):
+        """Cỡ mẫu mỗi nhóm để so hai tỉ lệ p1 và p2 (công thức trong đề)."""
+        za = NormalDist().inv_cdf(1 - alpha / 2)   # 1,96
+        zb = NormalDist().inv_cdf(power)           # 0,84
+        pb = (p1 + p2) / 2
+        tu = (za * math.sqrt(2 * pb * (1 - pb)) + zb * math.sqrt(p1 * (1 - p1) + p2 * (1 - p2))) ** 2
+        return math.ceil(tu / (p2 - p1) ** 2)      # làm tròn lên
+
+    ICC = 0.02
+    print('\nD1 · Cỡ mẫu')
+    n_a = co_mau(0.70, 0.75)
+    print(f'a) Chia theo yêu cầu: {n_a} yêu cầu mỗi nhóm')
+
+    m = 75
+    de_b = 1 + (m - 1) * ICC
+    n_b = math.ceil(n_a * de_b)
+    nv_b = math.ceil(n_b / m)
+    print(f'b) Theo nhân viên, m = {m}: DE = {de_b:.2f}, cần {n_b} yêu cầu mỗi nhóm = {nv_b} nhân viên '
+          f'mỗi nhóm, tổng {2 * nv_b} > 40 → không đủ người')
+
+    print(f'c) 20 nhân viên mỗi nhóm: cỡ mẫu hiệu dụng tối đa < 20 / ICC = {20 / ICC:,.0f} < {n_a} → không đạt')
+    print(f'd) 6 depot mỗi nhóm: cỡ mẫu hiệu dụng tối đa < 6 / ICC = {6 / ICC:,.0f}')
+
+    n_e = co_mau(0.70, 0.76)
+    m_e = math.ceil(n_e * (1 - ICC) / (20 - n_e * ICC))   # giải 20m / (1 + (m-1)ICC) >= n_e
+    print(f'e) Mức chênh 6 điểm cần {n_e} mỗi nhóm; 20 nhân viên mỗi nhóm → mỗi người ít nhất {m_e} '
+          f'yêu cầu (DE = {1 + (m_e - 1) * ICC:.2f})')
+
+    pw = NormalIndPower().power(effect_size=proportion_effectsize(0.75, 0.70), nobs1=n_e, alpha=0.05)
+    print(f'Power nếu tác động thật chỉ 5 điểm mà cỡ mẫu {n_e}: {pw:.2f}')
+
+    # Tỉ lệ mở lại hiện tại, cần trước khi đặt luật dừng an toàn
+    print(f"Tỉ lệ mở lại 7 ngày hiện tại: {reqs['mo_lai_trong_7_ngay'].mean():.2%} "
+          f"({reqs['mo_lai_trong_7_ngay'].sum()}/{len(reqs)}); trong phạm vi noi_dia + hang_nang: "
+          f"{pham_vi['mo_lai_trong_7_ngay'].mean():.2%}")
