@@ -31,7 +31,12 @@ pilot:
     unit: "staff"
     control_share: 0.5
     randomized: true
-  rollout: [0.10, 0.25, 0.50]     # mỗi bước một tuần: 4 → 10 → 20 nhân viên dùng trợ lý; chỉ đo chỉ số chính từ bước 0.50
+  rollout: [0.10, 0.25, 0.50]
+  rollout_timing:
+    early_stages: "Dự kiến 7 ngày ở bước 4 người và 7 ngày ở bước 10 người, tùy kết quả kiểm tra an toàn trước khi tăng phạm vi"
+    primary_collection: "Chỉ lấy mẫu chỉ số chính ở bước 20 người dùng và 20 đối chứng đồng thời. Thu ít nhất 299 yêu cầu đủ điều kiện trên mỗi nhân viên ở cả hai nhóm"
+    collection_estimate: "Khoảng 8 ngày nếu dùng toàn bộ 1.500 yêu cầu/ngày. Với phạm vi pilot 982/1.200 yêu cầu và 40 nhân viên, ước khoảng 10 ngày nếu lưu lượng chia đều. Kiểm tra số thực tế theo từng nhân viên"
+    follow_up: "Chờ đủ cửa sổ không mở lại 7 ngày kể từ khi đóng mỗi yêu cầu trước khi đọc kết quả chính"
   primary_metric:
     name: dong_trong_24h_khong_mo_lai_7_ngay
     baseline: 0.70
@@ -46,14 +51,17 @@ pilot:
     spillover_risk: "Trung bình: nhân viên cùng depot có thể chia sẻ câu trả lời; giảm bằng phân quyền theo tài khoản và log lượt mở trợ lý theo staff_id"
     predeclared: "Có: chỉ số chính, mde, luật dừng và ngày quyết định chốt trong file này trước ngày bắt đầu"
   stop_rules:
-    - "NẾU tỉ lệ mở lại trong 7 ngày của nhóm dùng trợ lý cao hơn nhóm đối chứng từ 2 điểm trở lên hoặc vượt 6%, hoặc có từ 1 ca hoàn tiền trùng TRONG 3 ngày liên tiếp THÌ Giám đốc vận hành tắt trợ lý trong 30 phút KHÔNG THÌ không được sang bước rollout tiếp theo"
-    - "NẾU chi phí mỗi việc thành công vượt 8.000 đ TRONG 2 tuần liên tiếp THÌ PM trợ lý hoàn phí thu hẹp phạm vi về noi_dia và giới hạn tối đa 2 lần chạy KHÔNG THÌ không được mở thêm hang_nang"
+    - "NẾU phát hiện từ 1 ca hoàn tiền trùng hoặc đã báo hoàn mà đối soát xác nhận chưa ghi sổ TRONG bất kỳ bước nào, kể cả bước 4 người THÌ Giám đốc vận hành tắt trợ lý trong 30 phút KHÔNG THÌ tiếp tục đối soát"
+    - "NẾU tỉ lệ mở lại trong 7 ngày của nhóm dùng trợ lý vượt 6% TRONG bất kỳ kỳ kiểm tra hằng ngày nào ở mọi bước, trên các yêu cầu đã đủ 7 ngày theo dõi THÌ Giám đốc vận hành tắt trợ lý trong 30 phút KHÔNG THÌ tiếp tục giám sát"
+    - "NẾU từ bước 10 người, tỉ lệ mở lại trong 7 ngày của nhóm dùng trợ lý cao hơn đối chứng đồng thời từ 2 điểm phần trăm TRONG 3 lần kiểm tra hằng ngày liên tiếp trên các yêu cầu đã đủ cửa sổ theo dõi THÌ Giám đốc vận hành tắt trợ lý trong 30 phút KHÔNG THÌ tiếp tục giám sát theo kế hoạch"
+    - "NẾU chi phí biến đổi mỗi việc thành công (token, tool, xem lại và làm lại) vượt 8.000 đ TRONG 2 tuần liên tiếp THÌ PM trợ lý hoàn phí thu hẹp phạm vi về noi_dia và giới hạn tối đa 2 lần chạy KHÔNG THÌ giữ phạm vi hiện tại theo kế hoạch"
     - "NẾU tỉ lệ bỏ qua gợi ý (sửa + bỏ) vượt 40% TRONG 1 tuần THÌ Trưởng nhóm CSKH phỏng vấn 5 nhân viên trong 3 ngày KHÔNG THÌ không được chuyển bước rollout"
   interim_looks: "chỉ kiểm tra chỉ số an toàn"
   rollback: "Giám đốc vận hành bấm cờ tắt trợ lý, hiệu lực trong 30 phút; khách được phục vụ bằng luồng nhân viên tự làm như trước pilot"
   decision_date: "2027-01-05"
+  decision_readiness: "Nếu đến ngày dự kiến mà chưa đủ mẫu hoặc dữ liệu chưa đủ cửa sổ theo dõi, dời buổi quyết định đến khi đủ dữ liệu"
   simulated_inputs:
     - "Chi phí mỗi việc thành công 4.472 đ (A2) và theo loại 2.696 / 8.221 / 22.515 / 10.215 đ (A3), tính từ phut_xem_lai_simulated và phut_lam_lai_simulated"
     - "Chi phí cộng cố định 4.599 đ = 0,38× (A4)"
-    - "Xem lại 100%: 11.743 đ = 0,98× (9 phút làm lại) và 12.414 đ = 1,03× (15,3 phút) (B4)"
+    - "Xem lại 100%: 11.743 đ = 0,98× (9 phút làm lại) và 12.415 đ = 1,03× (thời gian làm lại trung bình trong dữ liệu) (B4, simulated)"
     - "Ngưỡng chi phí 8.000 đ trong luật dừng, dựa trên bảng độ nhạy B1"
