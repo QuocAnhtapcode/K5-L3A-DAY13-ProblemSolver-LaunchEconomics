@@ -1,0 +1,329 @@
+{
+  "meta": {
+    "requests": 1200,
+    "runs": 1624,
+    "depots": 6,
+    "staff": 20,
+    "scope_requests": 982,
+    "all_data": "giả lập",
+    "cost_label": "simulated",
+    "sources": [
+      "logix_runs.csv",
+      "logix_requests.csv"
+    ]
+  },
+  "a1": [
+    1.2,
+    1.25,
+    1.25
+  ],
+  "a2": {
+    "token": 245585.13199999998,
+    "tool": 84000.0,
+    "chay_lai": 93804.488,
+    "xem_lai": 1780000.0,
+    "lam_lai": 2264000.0,
+    "tong": 4373585.132,
+    "thanh_cong": 978,
+    "cps": 4471.968437627812,
+    "hoa_don_moi_yc": 274.65427666666665
+  },
+  "a3": [
+    {
+      "loai": "doi_tac",
+      "so_yc": 68,
+      "thanh_cong": 37,
+      "ti_le": 0.5441176470588235,
+      "lan_chay_tb": 1.8823529411764706,
+      "cps": 10214.867351351351,
+      "so_baseline": 0.851238945945946
+    },
+    {
+      "loai": "hang_nang",
+      "so_yc": 158,
+      "thanh_cong": 117,
+      "ti_le": 0.740506329113924,
+      "lan_chay_tb": 1.4683544303797469,
+      "cps": 8220.734837606838,
+      "so_baseline": 0.6850612364672365
+    },
+    {
+      "loai": "noi_dia",
+      "so_yc": 824,
+      "thanh_cong": 783,
+      "ti_le": 0.9502427184466019,
+      "lan_chay_tb": 1.1116504854368932,
+      "cps": 2695.641504469987,
+      "so_baseline": 0.2246367920391656
+    },
+    {
+      "loai": "quoc_te",
+      "so_yc": 150,
+      "thanh_cong": 41,
+      "ti_le": 0.2733333333333333,
+      "lan_chay_tb": 2.32,
+      "cps": 22515.165024390244,
+      "so_baseline": 1.8762637520325203
+    }
+  ],
+  "ok_theo_lan": [
+    {
+      "loai": "doi_tac",
+      "attempt": 1,
+      "ti_le": 0.5147058823529411
+    },
+    {
+      "loai": "doi_tac",
+      "attempt": 2,
+      "ti_le": 0.18181818181818182
+    },
+    {
+      "loai": "doi_tac",
+      "attempt": 3,
+      "ti_le": 0.14814814814814814
+    },
+    {
+      "loai": "hang_nang",
+      "attempt": 1,
+      "ti_le": 0.7088607594936709
+    },
+    {
+      "loai": "hang_nang",
+      "attempt": 2,
+      "ti_le": 0.391304347826087
+    },
+    {
+      "loai": "hang_nang",
+      "attempt": 3,
+      "ti_le": 0.17857142857142858
+    },
+    {
+      "loai": "noi_dia",
+      "attempt": 1,
+      "ti_le": 0.9101941747572816
+    },
+    {
+      "loai": "noi_dia",
+      "attempt": 2,
+      "ti_le": 0.7567567567567568
+    },
+    {
+      "loai": "noi_dia",
+      "attempt": 3,
+      "ti_le": 0.3888888888888889
+    },
+    {
+      "loai": "quoc_te",
+      "attempt": 1,
+      "ti_le": 0.3
+    },
+    {
+      "loai": "quoc_te",
+      "attempt": 2,
+      "ti_le": 0.11428571428571428
+    },
+    {
+      "loai": "quoc_te",
+      "attempt": 3,
+      "ti_le": 0.021505376344086023
+    }
+  ],
+  "scope": {
+    "token": 165023.27400000003,
+    "tool": 59490.0,
+    "chay_lai": 34737.88600000001,
+    "xem_lai": 1288000.0,
+    "lam_lai": 1560000.0,
+    "tong": 3072513.274,
+    "thanh_cong": 900,
+    "cps": 3413.903637777778,
+    "hoa_don_moi_yc": 228.62858859470472
+  },
+  "a4": [
+    {
+      "khoi_luong": 45000,
+      "thanh_cong_thang": 33750.0,
+      "co_dinh_moi_viec": 1185.1851851851852,
+      "cps": 4599.088822962964,
+      "so_baseline": 0.3832574019135803
+    },
+    {
+      "khoi_luong": 22500,
+      "thanh_cong_thang": 16875.0,
+      "co_dinh_moi_viec": 2370.3703703703704,
+      "cps": 5784.274008148148,
+      "so_baseline": 0.48202283401234564
+    }
+  ],
+  "b1": [
+    {
+      "kich_ban": "Giá token gấp đôi",
+      "tham_so": {
+        "gia_vao": 52,
+        "gia_ra": 260
+      },
+      "cps": 4723.077979550103,
+      "thay_doi": 5.615190389301894
+    },
+    {
+      "kich_ban": "Giá token giảm nửa",
+      "tham_so": {
+        "gia_vao": 13,
+        "gia_ra": 65
+      },
+      "cps": 4346.413666666666,
+      "thay_doi": -2.807595194650947
+    },
+    {
+      "kich_ban": "Xem lại gấp đôi",
+      "tham_so": {
+        "he_so_xem_lai": 2
+      },
+      "cps": 6292.009337423313,
+      "thay_doi": 40.69887623717119
+    },
+    {
+      "kich_ban": "Xem lại giảm nửa",
+      "tham_so": {
+        "he_so_xem_lai": 0.5
+      },
+      "cps": 3561.9479877300614,
+      "thay_doi": -20.349438118585596
+    },
+    {
+      "kich_ban": "Làm lại gấp đôi",
+      "tham_so": {
+        "he_so_lam_lai": 2
+      },
+      "cps": 6786.896862985685,
+      "thay_doi": 51.76531224772785
+    },
+    {
+      "kich_ban": "Làm lại giảm nửa",
+      "tham_so": {
+        "he_so_lam_lai": 0.5
+      },
+      "cps": 3314.5042249488756,
+      "thay_doi": -25.88265612386391
+    },
+    {
+      "kich_ban": "Lương tăng 25%",
+      "tham_so": {
+        "luong_phut": 2500
+      },
+      "cps": 5505.710768916156,
+      "thay_doi": 23.11604712122477
+    },
+    {
+      "kich_ban": "Tối đa 2 lần",
+      "tham_so": {
+        "max_lan_chay": 2
+      },
+      "cps": 4237.288022774327,
+      "thay_doi": -5.247810178597156
+    },
+    {
+      "kich_ban": "Tối đa 1 lần",
+      "tham_so": {
+        "max_lan_chay": 1
+      },
+      "cps": 4110.988245175937,
+      "thay_doi": -8.072064852124939
+    }
+  ],
+  "b2": {
+    "cps": 6543.118879345604,
+    "thay_doi": 46.314066626473085
+  },
+  "b3": [
+    {
+      "gioi_han": 1,
+      "tong_tro_ly": 3621780.6440000003,
+      "khong_thanh_cong": 319,
+      "ca_he_thong": 7449780.644,
+      "cps": 4110.988245175937
+    },
+    {
+      "gioi_han": 2,
+      "tong_tro_ly": 4093220.23,
+      "khong_thanh_cong": 234,
+      "ca_he_thong": 6901220.23,
+      "cps": 4237.288022774327
+    },
+    {
+      "gioi_han": 3,
+      "tong_tro_ly": 4373585.132,
+      "khong_thanh_cong": 222,
+      "ca_he_thong": 7037585.132,
+      "cps": 4471.968437627812
+    }
+  ],
+  "b4": [
+    {
+      "phut_lam_lai": 9.0,
+      "yc_ok": 948,
+      "ca_lam_lai": 48,
+      "token_tool": 224513.27400000003,
+      "xem_lai": 9480000,
+      "lam_lai": 864000.0,
+      "tong": 10568513.274,
+      "thanh_cong": 900,
+      "cps": 11742.792526666666,
+      "phut_xem_lai_hoa_von": 5.122092155063291
+    },
+    {
+      "phut_lam_lai": 15.3,
+      "yc_ok": 948,
+      "ca_lam_lai": 48,
+      "token_tool": 224513.27400000003,
+      "xem_lai": 9480000,
+      "lam_lai": 1468800.0000000002,
+      "tong": 11173313.274,
+      "thanh_cong": 900,
+      "cps": 12414.792526666666,
+      "phut_xem_lai_hoa_von": 4.803104813291139
+    }
+  ],
+  "phut_lam_lai_tb": 15.297297297297296,
+  "d1": {
+    "n5": 1251,
+    "de75": 2.48,
+    "n75": 3103,
+    "nguoi_moi_nhom": 42,
+    "tran20": 1000.0,
+    "tran6": 300.0,
+    "n6": 859,
+    "m6": 299,
+    "de6": 6.96,
+    "raw6": 5980,
+    "effective6": 859.1954022988506,
+    "power5": 0.6416562543819839
+  },
+  "e": {
+    "primary_count": 994,
+    "primary": 0.8283333333333334,
+    "reviewed": 177,
+    "overrides": 48,
+    "override_rate": 0.2711864406779661,
+    "reopened": 51,
+    "reopen_rate": 0.0425,
+    "scope_reopened": 39,
+    "scope_reopen_rate": 0.03971486761710794,
+    "scope_rework_rate": 0.048879837067209775
+  },
+  "scope_cap2": {
+    "token": 157391.39,
+    "tool": 57000.0,
+    "chay_lai": 24616.002,
+    "xem_lai": 1256000.0,
+    "lam_lai": 1430000.0,
+    "tong": 2900391.39,
+    "thanh_cong": 892,
+    "cps": 3251.5598542600897,
+    "hoa_don_moi_yc": 218.32117107942975
+  },
+  "system_cost_per_request": 5864.654276666667,
+  "ratio_invoice": 16.282172962685024,
+  "rework_share": 0.5176531224772785,
+  "human_share": 0.9246418848489902
+}

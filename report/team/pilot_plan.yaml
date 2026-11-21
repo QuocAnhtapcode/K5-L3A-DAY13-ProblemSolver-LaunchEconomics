@@ -1,51 +1,84 @@
-# Lab 13 · Nhiệm vụ D · Kế hoạch pilot trợ lý hoàn phí LogiX-VN (Gate 2a)
-# Điền mọi chỗ có dấu hỏi. Khi nộp, ngoài các dòng chú thích không còn dấu hỏi nào.
-# Kiểm tra đọc được: python -c "import yaml; yaml.safe_load(open('../report/team/pilot_plan.yaml'))"
-#
-# D1 · Cỡ mẫu (baseline 0,70; mục tiêu +5 điểm; alpha 0,05; power 0,8; ICC 0,02)
-#   a) Chia theo yêu cầu:
-#   b) Theo nhân viên, m = 75:
-#   c) 20 nhân viên mỗi nhóm:
-#   d) 6 depot mỗi nhóm:
-#   e) Mức chênh 6 điểm (859 mỗi nhóm), 20 nhân viên mỗi nhóm:
-#
-# D2 · Năm câu kiểm tra "tách được tác động" với cách chia đã chọn (mỗi câu một dòng):
-#   1. Đối chứng chạy cùng thời gian:
-#   2. Chia ngẫu nhiên hay do người chọn:
-#   3. Ảnh hưởng gián tiếp và cách giảm:
-#   4. Chỉ số chính, ngưỡng, ngày quyết định đã viết trước:
-#   5. Ít nhất 20 cụm mỗi nhóm:
-#
-# Đánh đổi đã chấp nhận (nếu cách chia chưa đạt cả hai điều kiện):
-#
-# Tỉ lệ mo_lai_trong_7_ngay hiện tại và ngưỡng an toàn đã chọn:
-
+# Kế hoạch đề xuất của lab; chưa phải bằng chứng pilot đã được triển khai.
+# D1a: 0,70 -> 0,75; alpha 0,05, power 0,8: 1.251 độc lập/nhánh.
+# D1b: m=75, ICC=0,02: DE=2,48; 3.103 thực tế/nhánh; 42 người/nhánh (84>40).
+# D1c: 20 người/nhánh có trần hiệu dụng 20/0,02=1.000, không đạt 1.251.
+# D1d: 6 depot/nhánh có trần hiệu dụng 6/0,02=300; ít hơn 20 cụm/nhánh.
+# D1e: MDE 6 điểm cần 859 hiệu dụng; m>=299, DE=6,96;
+#       20*299=5.980 thực tế/nhánh, 5.980/6,96=859,195 hiệu dụng.
+# D2.1: Đối chứng 20 staff không dùng AI, cùng giai đoạn và cùng các depot.
+# D2.2: Chia ngẫu nhiên theo staff, seed=1313, phân tầng depot trước khi chạy.
+# D2.3: Có nguy cơ chia sẻ câu trả lời; phân quyền theo staff, log truy cập và báo nhiễm.
+# D2.4: Chỉ số, luật dừng, MDE và ngày quyết định chốt trước 2026-11-30.
+# D2.5: Đủ 20 cụm/nhánh khi rollout ổn định; mẫu giai đoạn 10%/25% không vào phân tích chính.
+# Đánh đổi: chấp nhận 6 thay vì 5 điểm phần trăm; nếu tác động chỉ 5 điểm, power~0,6417.
+# Tỷ lệ mở lại hiện tại: toàn mẫu 51/1.200=4,25%; phạm vi 39/982=3,97%.
+# D1 baseline 0,70 là giả định đề, không thay bằng 82,83% của mẫu thiếu đối chứng.
+# Các ngày dưới đây là lịch đề xuất, chưa có xác nhận đã thực hiện.
 pilot:
-  owner: "?"                      # một người có tên vai trò, không ghi "cả đội"
-  scope: "?"                      # loại yêu cầu nào, depot nào; dựa vào kết quả A3
+  planning_status: proposed
+  owner: "Giám đốc vận hành LogiX-VN"
+  scope: "Chỉ noi_dia và hang_nang ở 12 depot; cần roster 40 CSKH. Loại quoc_te (CPS 22.515 đ, simulated) và doi_tac (10.215 đ, simulated). Mẫu CSV chỉ có 6 depot/20 staff."
+  max_attempts: 2
+  scope_cost_evidence: "Tính lại phạm vi với 2 lượt: 892/982 thành công, CPS 3.252 đ — simulated; chưa gồm cố định và xử lý thủ công. A4/B4 giữ baseline trace 3 lượt theo đề."
+  prerequisites:
+    - "Trước 2026-11-27: kỹ sư trưởng kiểm chứng chống hoàn trùng, đối soát sổ cái và 12 event có trace_id."
+    - "Trước 2026-11-27: trưởng CSKH hoàn thiện bằng chứng hai bộ nhãn độc lập; chưa đủ thì xin coach cách bổ sung."
+    - "Trước 2026-11-27: giám đốc vận hành xác nhận roster 40 người/12 depot, ký đánh đổi MDE 6 điểm và quyền dừng."
+    - "Chưa đạt bất kỳ điều kiện nào thì không bắt đầu; giữ luồng nhân viên tự làm."
   assignment:
-    unit: "?"                     # request | staff | depot
+    unit: staff
     control_share: 0.5
     randomized: true
-  rollout: [0.10, 0.25, 0.50]     # mỗi bước một tuần
+    seed: 1313
+    treatment_clusters: 20
+    control_clusters: 20
+    procedure: "Khóa roster trước ngày bắt đầu. Xáo trộn staff trong từng depot với seed 1313, chia cân bằng hai nhánh; phân bổ các staff lẻ giữa depot để tổng đúng 20/20. Lưu roster và kết quả bốc thăm trước khi bật quyền."
+  start_date: "2026-11-30"
+  rollout: [0.10, 0.25, 0.50]
+  rollout_denominator: "40 staff toàn công ty; tương ứng 4, 10, 20 staff AI; 20 đối chứng giữ cố định."
+  phases:
+    - {start: "2026-11-30", end: "2026-12-06", ai_staff: 4, review_share: 1.0, primary_analysis: false}
+    - {start: "2026-12-07", end: "2026-12-13", ai_staff: 10, review_share: 0.5, primary_analysis: false}
+    - {start: "2026-12-14", end: "2027-01-10", ai_staff: 20, review_share: 0.25, primary_analysis: true}
+  review_policy: "Tỷ lệ review là trần giảm theo kế hoạch, không tự động giảm. Chỉ giảm khi audit 100 đơn/tuần không có sai tiền, mở lại 7 ngày không vượt 6% hoặc chênh đối chứng 2 điểm, đủ event và không có luật dừng. Không đạt thì giữ mức review trước và không tăng rollout."
   primary_metric:
     name: dong_trong_24h_khong_mo_lai_7_ngay
     baseline: 0.70
-    mde: 0.05
+    mde: 0.06
     alpha: 0.05
     power: 0.80
-    n_per_arm: "?"
-    design_effect: "?"            # 1 nếu chia theo yêu cầu
-    clusters_per_arm: "?"         # để trống nếu chia theo yêu cầu
+    n_per_arm: 5980
+    n_per_arm_basis: "Số request thực tế mỗi nhánh; không phải cỡ mẫu độc lập."
+    effective_n_per_arm: 859
+    min_requests_per_staff: 299
+    design_effect: 6.96
+    clusters_per_arm: 20
+    icc: 0.02
+    followup_days: 7
+    observation_window: "Đóng trong 24 giờ từ tiếp nhận; không mở lại trong 7 ngày kể từ đóng."
+    analysis_population: "Intention-to-treat, chỉ request đủ điều kiện ở pha 20/20, theo nhánh đã bốc thăm; không loại ca chuyển nhân viên hoặc lỗi."
+    inference: "Kiểm định hai phía alpha=0,05, sai số chuẩn có điều chỉnh cụm staff_id và phân tầng depot; không coi 5.980 request là độc lập. DE và power là xấp xỉ hoạch định."
+    success_rule: "Chỉ đề xuất bước tiếp khi đủ >=299 request hợp lệ và đủ theo dõi ở từng staff của cả 2 nhánh, chênh điểm ước lượng >=6 điểm, CI 95% của chênh nằm trên 0, không vi phạm an toàn và đạt ngưỡng chi phí đã chốt."
   identifiability:
-    concurrent_control: "?"
-    spillover_risk: "?"
-    predeclared: "?"
+    concurrent_control: "20 staff đối chứng hoạt động cùng thời gian; cùng tiêu chí đủ điều kiện, chính sách, đào tạo nền và hệ thống ticket."
+    spillover_risk: "Phân quyền AI theo tài khoản; không chia sẻ gợi ý sang đối chứng; log staff_id/arm và báo mọi truy cập sai nhánh. Phân tích theo phân nhóm ban đầu, ghi độ nhiễm."
+    predeclared: "Khóa roster, seed, MDE, cửa sổ dữ liệu, cách phân tích, luật dừng và ngày quyết định trước 2026-11-30."
   stop_rules:
-    - "NẾU ? TRONG ? THÌ ? KHÔNG THÌ ?"
-    - "NẾU ? TRONG ? THÌ ? KHÔNG THÌ ?"
-    - "NẾU ? TRONG ? THÌ ? KHÔNG THÌ ?"
-  interim_looks: "chỉ kiểm tra chỉ số an toàn"
-  rollback: "?"                   # ai bấm, mất bao lâu, khách được phục vụ bằng gì
-  decision_date: "?"
-  simulated_inputs: ["?"]         # liệt kê mọi con số giả lập đã dùng
+    - "NẾU có ít nhất 1 ca hoàn trùng hoặc báo đã hoàn mà sổ cái chưa thành công TRONG bất kỳ lần đối soát hằng giờ nào THÌ Giám đốc vận hành tắt AI trong 30 phút và Kế toán trưởng đối soát ca bị ảnh hưởng KHÔNG THÌ không được tiếp tục tự động hoàn hay tăng rollout."
+    - "NẾU mở lại 7 ngày vượt 6% hoặc cao hơn đối chứng ít nhất 2 điểm phần trăm TRONG 2 lần kiểm tra hằng ngày liên tiếp trên cohort đã đủ 7 ngày theo dõi, tối thiểu 100 request mỗi nhánh THÌ Giám đốc vận hành dừng AI trong 30 phút KHÔNG THÌ không được tăng rollout; chưa đủ mẫu theo dõi thì giữ bước hiện tại."
+    - "NẾU CPS trong phạm vi vượt 8.000 đ, tính đủ token/tool và phút xem lại/làm lại thực tế TRONG 2 tuần liên tiếp THÌ PM thu hẹp về nội địa và giữ tối đa 2 lượt KHÔNG THÌ không được mở thêm hàng nặng hoặc tăng rollout."
+    - "NẾU tỷ lệ sửa hoặc bỏ gợi ý vượt 40% trên ít nhất 50 request được xem lại TRONG 1 tuần THÌ Trưởng nhóm CSKH phỏng vấn 5 nhân viên trong 3 ngày và sửa quy trình KHÔNG THÌ không được tăng rollout; chưa đủ 50 request thì giữ bước hiện tại."
+  interim_looks: "Chỉ chỉ số an toàn được kiểm định giữa kỳ để dừng sớm; chi phí và sử dụng dùng để giữ/thu hẹp rollout, không tuyên bố hiệu quả sớm. Chỉ số chính phân tích một lần vào ngày quyết định."
+  rollback: "Giám đốc vận hành tắt quyền AI bằng cờ tính năng, hiệu lực <=30 phút; CSKH xử lý thủ công 6 phút/request theo giả định lab, giữ request_id và trace; Kế toán trưởng đối soát giao dịch đang chờ."
+  data_quality: "Mất event/không nối được trace hoặc thiếu cohort trưởng thành thì giữ rollout; không tự thay số thiếu thành 0. Phút xem lại và làm lại dùng đo thật từ tuần đầu."
+  enrollment_end_date: "2027-01-10"
+  followup_end_date: "2027-01-18"
+  decision_date: "2027-01-19"
+  insufficient_sample_rule: "Đến ngày quyết định mà chưa đủ >=299 request/staff, thiếu cụm hoặc thiếu theo dõi thì kết luận chưa đủ bằng chứng, không Go và không tự gia hạn sau khi xem hiệu quả."
+  simulated_inputs:
+    - "Toàn bộ 1.200 request/1.624 run trong CSV và các chỉ số 82,83%, 27,12%, 4,25%; phạm vi mở lại 3,97%."
+    - "phut_xem_lai_simulated và phut_lam_lai_simulated; mọi tổng chi phí, CPS, tỷ trọng và độ nhạy suy ra: simulated."
+    - "Giá giả định: 26/130 đ trên 1.000 token; tool 15 đ; lương 2.000 đ/phút; thủ công 12.000 đ/request; cố định 40 triệu/tháng."
+    - "45.000 request/tháng; 12 depot/40 staff là bối cảnh giả định; roster thực tế chưa được cung cấp."
+    - "D1: baseline 0,70, MDE 0,05/0,06, ICC 0,02; mẫu 1.251/859 và DE từ các giả định này."
+    - "B4: xem lại 5 phút, làm lại 9 hoặc 15,3 phút; CPS 11.743/12.415 đ — simulated."
